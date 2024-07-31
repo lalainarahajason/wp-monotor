@@ -9,6 +9,7 @@ import {
 
 import { Header } from "@/components/auth/header";
 import { Social } from "@/components/auth/social";
+import { BackButton } from "@/components/auth/back-button";
 
 
 interface CardWrapperProps {
@@ -24,7 +25,7 @@ export const CardWrapper = ({
     headerLabel,
     backButtonLabel,
     backButtonHref,
-    showSocial = true
+    showSocial
 } : CardWrapperProps) => {
 
     return(
@@ -35,15 +36,18 @@ export const CardWrapper = ({
             <CardContent>
                 { children }
             </CardContent>
-            {showSocial ? (
+            {showSocial && (
                 <CardFooter>
                     <Social />
                 </CardFooter>
-            ) : (
-                <CardFooter>
-                    <a href={backButtonHref} className="text-sm text-muted-foreground">{backButtonLabel}</a>
-                </CardFooter>
             )}
+            <CardFooter>
+                    
+                    <BackButton 
+                        href={backButtonHref}
+                        label={backButtonLabel}
+                    />
+                </CardFooter>
         </Card>
     )
 }
