@@ -18,6 +18,9 @@ import {
 } from "@/components/ui/form"
 
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { FormError } from "@/components/form-error";
+import { FormSuccess } from "@/components/form-success";
 
 export const LoginForm = () => {
 
@@ -29,6 +32,10 @@ export const LoginForm = () => {
     },
   });
 
+  const onSubmit = (values: z.infer<typeof LoginSchema>) => {
+    console.log(values)
+  }
+
   return (
     <CardWrapper
       headerLabel="Welcom back"
@@ -38,16 +45,17 @@ export const LoginForm = () => {
     >
       <Form {...form}>
         <form 
-          onSubmit={form.handleSubmit(() => {})}
+          onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6"
           >
             <div className="space-y-4">
+              {/** Email field */}
               <FormField 
                 control={form.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email</FormLabel>
+                    <FormLabel>Email address</FormLabel>
                     <FormControl>
                       <Input 
                         {...field}
@@ -55,10 +63,32 @@ export const LoginForm = () => {
                         type="email"
                       />
                     </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              {/** Password field */}
+              <FormField 
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Password</FormLabel>
+                    <FormControl>
+                      <Input 
+                        {...field}
+                        placeholder="*******"
+                        type="password"
+                      />
+                    </FormControl>
+                    <FormMessage />
                   </FormItem>
                 )}
               />
             </div>
+            <FormError message="" />
+            <FormSuccess message="" />
+            <Button type="submit" className="w-full">Log In</Button>
           </form>
       </Form>
     </CardWrapper>
