@@ -23,6 +23,7 @@ export const Social = () => {
                 >
                 <FaGithub className="h-5 w-5" />
             </Button>
+            {/** duration: 1:01:38 */}
         </div>
     )
 }
