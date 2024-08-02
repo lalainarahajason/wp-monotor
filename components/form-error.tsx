@@ -10,6 +10,8 @@ export const FormError = ({
 
     if(!message) return null
 
+    console.log("test")
+
     return (
         <div className="
         bg-destructive/15 
