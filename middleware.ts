@@ -2,8 +2,6 @@ import NextAuth from "next-auth";
 
 import authConfig from "@/auth.config";
 
-import { NextRequest, NextResponse } from "next/server";
-
 import {
     DEFAULT_LOGIN_REDIRECT,
     publicRoutes,  
@@ -23,24 +21,24 @@ export default auth((req) => {
     const isAuthRoute = authRoutes.includes(nextUrl.pathname)
 
     if(isApiAuthRoute) {
-        return
+        return;
     }
 
     if(isAuthRoute) {
         if(isLoggedIn) {
             return Response.redirect(new URL(DEFAULT_LOGIN_REDIRECT, nextUrl))
         }
-        return
+        return;
     }
 
     if(!isLoggedIn && !isPublicRoute) {
         return Response.redirect(new URL("/auth/login", nextUrl))
     }
 
-    return
+    return;
 
 })
-    
+
 export const config = {
     matcher: [
         // Skip Next.js internals and all static files, unless found in search params
