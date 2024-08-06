@@ -1,3 +1,4 @@
+"use client"
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -5,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { LoginSchema } from "@/schemas";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { useTransition, useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   Form,
@@ -20,13 +22,16 @@ import { Button } from "@/components/ui/button";
 import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 
-import { login } from "@/actions/login";
+import { Login } from "@/actions/login";
+import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const LoginForm = () => {
 
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string|undefined>("")
   const [success, setSuccess] = useState<string|undefined>("")
+
+  const router = useRouter()
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -42,13 +47,13 @@ export const LoginForm = () => {
     setSuccess("")
 
     startTransition(() => {
-      login(values)
+      Login(values)
       .then((data) => {
 
-        if(data && data.error) {
+        if(data?.error) {
           setError(data.error)
         } else {
-          setError("une erreur est survenue")
+          router.push(DEFAULT_LOGIN_REDIRECT)
         }
         
       })
