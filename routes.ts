@@ -3,7 +3,7 @@
  * These routes do not require auth authentication
  * @type {string[]}
  */
-export const PublicRoutes = [
+export const publicRoutes = [
     "/"
 ]
 
@@ -17,4 +17,16 @@ export const authRoutes = [
     "/auth/register"
 ]
 
+/**
+ * The prefix for API authentication routes
+ * Routes that start with this prefix are used for API
+ * authentication purpose
+ * @type {string}
+ */
 export const apiAuthPrefix = "/api/auth"
+
+/**
+ * The default redirect path after login in
+ * @type {string}
+ */
+export const DEFAULT_LOGIN_REDIRECT = "/settings"
