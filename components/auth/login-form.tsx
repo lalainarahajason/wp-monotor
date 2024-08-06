@@ -44,11 +44,13 @@ export const LoginForm = () => {
     startTransition(() => {
       login(values)
       .then((data) => {
-        if(data.error) {
+
+        if(data && data.error) {
           setError(data.error)
         } else {
-          setSuccess(data.success)
+          setError("une erreur est survenue")
         }
+        
       })
     })
     
