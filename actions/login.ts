@@ -33,6 +33,10 @@ export const Login = async (values: z.infer<typeof LoginSchema>) => {
         return {
             success: "User logged in successfully"
         }
+    } else {
+      return {
+        error: "Login ou mot de passe invalide"
+      }
     }
 
   } catch (error) {
