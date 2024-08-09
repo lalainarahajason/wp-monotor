@@ -5,7 +5,7 @@ import authConfig from "@/auth.config"
 import { getUserById } from "@/data/user"
 import { UserRole } from "@prisma/client"
  
-export const { handlers:{GET, POST}, signIn, signOut, auth } = NextAuth({
+export const { handlers, signIn, signOut, auth } = NextAuth({
     callbacks: {
         async session({ token, session }) {
 
