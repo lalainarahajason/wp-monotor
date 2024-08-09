@@ -5,6 +5,8 @@ import bcrypt from "bcryptjs"
 import * as z from "zod"
 import { RegisterSchema } from "@/schemas"
 import { getUserByEmail } from "@/data/user"
+import { generateVerificationToken } from "@/lib/tokens"
+import { vendored } from "next/dist/server/future/route-modules/app-page/module.compiled"
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
@@ -34,7 +36,8 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         }
     })
 
-    // TODO send verification email token
+    const verificationToken = generateVerificationToken(email)
 
-    return { success : "User created successfully"}
+    // TODO send verification email token
+    return { success : "Confirmation email sent"}
 }
