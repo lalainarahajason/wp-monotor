@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import * as z from "zod";
 import { useForm } from "react-hook-form";
@@ -14,8 +14,8 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage
-} from "@/components/ui/form"
+  FormMessage,
+} from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
@@ -26,17 +26,17 @@ import { Login } from "@/actions/login";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const LoginForm = () => {
+  const searchParams = useSearchParams();
+  const urlError =
+    searchParams.get("error") === "OAuthAccountNotLinked"
+      ? "Email already in use with different provider"
+      : "";
 
-  const searchParams = useSearchParams()
-  const urlError = searchParams.get("error") === "OAuthAccountNotLinked"
-  ? "Email already in use with different provider" 
-  : ""
+  const [isPending, startTransition] = useTransition();
+  const [error, setError] = useState<string | undefined>("");
+  const [success, setSuccess] = useState<string | undefined>("");
 
-  const [isPending, startTransition] = useTransition()
-  const [error, setError] = useState<string|undefined>("")
-  const [success, setSuccess] = useState<string|undefined>("")
-
-  const router = useRouter()
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -47,28 +47,23 @@ export const LoginForm = () => {
   });
 
   const onSubmit = (values: z.infer<typeof LoginSchema>) => {
-
-    setError("")
-    setSuccess("")
+    setError("");
+    setSuccess("");
 
     startTransition(() => {
-      Login(values)
-      .then((data) => {
+      Login(values).then((data) => {
+        console.log(data);
 
-        console.log(data)
-
-        if(data?.error) {
-          console.log("test")
-          setError(data.error)
+        if (data?.error) {
+          setError(data.error);
+        } else if (data?.success) {
+          setSuccess(data.success);
         } else {
-          console.log("push login")
-          router.push(DEFAULT_LOGIN_REDIRECT)
+          router.push(DEFAULT_LOGIN_REDIRECT);
         }
-        
-      })
-    })
-    
-  }
+      });
+    });
+  };
 
   return (
     <CardWrapper
@@ -78,54 +73,53 @@ export const LoginForm = () => {
       showSocial
     >
       <Form {...form}>
-        <form 
-          onSubmit={form.handleSubmit(onSubmit)}
-          className="space-y-6"
-          >
-            <div className="space-y-4">
-              {/** Email field */}
-              <FormField 
-                control={form.control}
-                name="email"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Email address</FormLabel>
-                    <FormControl>
-                      <Input 
-                        {...field}
-                        placeholder="johdoe@example.com"
-                        type="email"
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              {/** Password field */}
-              <FormField 
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Password</FormLabel>
-                    <FormControl>
-                      <Input 
-                        {...field}
-                        placeholder="*******"
-                        type="password"
-                        disabled={isPending}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </div>
-            <FormError message={error || urlError} />
-            <FormSuccess message={success} />
-            <Button type="submit" className="w-full" disabled={isPending}>Log In</Button>
-          </form>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+          <div className="space-y-4">
+            {/** Email field */}
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email address</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="johdoe@example.com"
+                      type="email"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            {/** Password field */}
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      placeholder="*******"
+                      type="password"
+                      disabled={isPending}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          </div>
+          <FormError message={error || urlError} />
+          <FormSuccess message={success} />
+          <Button type="submit" className="w-full" disabled={isPending}>
+            Log In
+          </Button>
+        </form>
       </Form>
     </CardWrapper>
   );
