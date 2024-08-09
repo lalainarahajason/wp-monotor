@@ -50,6 +50,8 @@ export const LoginForm = () => {
       Login(values)
       .then((data) => {
 
+        console.log("data", data)
+
         if(data?.error) {
           setError(data.error)
         } else {
