@@ -1,8 +1,8 @@
-import React from 'react'
+import { NewVerificationForm } from "@/components/auth/new-verification-form"
 
 function NewVerification() {
   return (
-    <div>page</div>
+    <NewVerificationForm />
   )
 }
 
