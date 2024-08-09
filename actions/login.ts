@@ -28,6 +28,8 @@ export const Login = async (values: z.infer<typeof LoginSchema>) => {
       redirectTo: "/settings",
     });
 
+
+
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

@@ -7,7 +7,7 @@ import { LoginSchema } from "@/schemas";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { useTransition, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { useSearchParams } from "next/navigation";
 import {
   Form,
   FormControl,
@@ -26,6 +26,11 @@ import { Login } from "@/actions/login";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
 export const LoginForm = () => {
+
+  const searchParams = useSearchParams()
+  const urlError = searchParams.get("error") === "OAuthAccountNotLinked"
+  ? "Email already in use with different provider" 
+  : ""
 
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string|undefined>("")
@@ -50,11 +55,13 @@ export const LoginForm = () => {
       Login(values)
       .then((data) => {
 
-        console.log("data", data)
+        console.log(data)
 
         if(data?.error) {
+          console.log("test")
           setError(data.error)
         } else {
+          console.log("push login")
           router.push(DEFAULT_LOGIN_REDIRECT)
         }
         
@@ -115,7 +122,7 @@ export const LoginForm = () => {
                 )}
               />
             </div>
-            <FormError message={error} />
+            <FormError message={error || urlError} />
             <FormSuccess message={success} />
             <Button type="submit" className="w-full" disabled={isPending}>Log In</Button>
           </form>
