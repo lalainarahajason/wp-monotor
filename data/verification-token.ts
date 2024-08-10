@@ -2,7 +2,7 @@
 
 import { db } from "@/lib/db";
 
-export const verificationTokenByEmail = async (email:string) => {
+export const getVerificationTokenByEmail = async (email:string) => {
     try {
         const verificationToken = await db.verificationToken.findFirst({
             where:{ email }

@@ -19,3 +19,20 @@ export const sendVerificationEmail = async (
         `
     })
 }
+
+export const sendPasswordResetEmail = async (
+    email:string, 
+    token:string
+) => {
+    const resetLink = `${process.env.APP_DOMAIN}auth/new-password?token=${token}`
+
+    await resend.emails.send({
+        from:"ikalangitahaja@gmail.com",
+        to: email,
+        subject:"Change your password",
+        html: `
+            <h1>Changer your password</h1>
+            <a href="${resetLink}">Change password</a>
+        `
+    })
+}
