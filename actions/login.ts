@@ -9,7 +9,24 @@ import { generateVerificationToken } from "@/lib/tokens";
 import { getUserByEmail } from "@/data/user";
 import { sendVerificationEmail } from "@/lib/mail";
 
-export const Login = async (values: z.infer<typeof LoginSchema>) => {
+// Définir les types pour les résultats possibles de la fonction de connexion
+type LoginResult = {
+  message?: z.ZodError['errors'];
+  error?: string;
+  success?: string;
+};
+
+/**
+ * Gère le processus de connexion de l'utilisateur.
+ * 
+ * Cette fonction valide les informations de connexion, vérifie l'existence de l'utilisateur,
+ * gère la vérification de l'email si nécessaire, et tente de connecter l'utilisateur.
+ * 
+ * @param values - Les valeurs de connexion fournies par l'utilisateur
+ * @returns Une promesse résolvant vers un objet LoginResult
+ */
+export const Login = async (values: z.infer<typeof LoginSchema>): Promise<LoginResult> => {
+  // Valider les champs d'entrée
   const validatedFields = LoginSchema.safeParse(values);
 
   if (!validatedFields.success) {
@@ -19,42 +36,46 @@ export const Login = async (values: z.infer<typeof LoginSchema>) => {
     };
   }
 
-  // Récupérer l'email et le mot de passe
+  // Récupérer l'email et le mot de passe validés
   const { email, password } = validatedFields.data;
 
-  const existingUser = await getUserByEmail(email)
+  // Vérifier l'existence de l'utilisateur
+  const existingUser = await getUserByEmail(email);
 
-  if(!existingUser || !existingUser.email || !existingUser.password) {
+  if (!existingUser || !existingUser.email || !existingUser.password) {
     return {
-      error: "Email does not exists!"
-    }
+      error: "Email does not exist!"
+    };
   }
 
-  if(!existingUser.emailVerified) {
-    const verificationToken = await generateVerificationToken(existingUser.email)
+  // Vérifier si l'email de l'utilisateur est vérifié
+  if (!existingUser.emailVerified) {
+    // Générer et envoyer un token de vérification si l'email n'est pas vérifié
+    const verificationToken = await generateVerificationToken(existingUser.email);
 
     await sendVerificationEmail(
       verificationToken.email,
       verificationToken.token
-    )
+    );
 
     return {
       success: "Confirmation email sent"
-    }
+    };
   }
   
-  // Sign in
+  // Tenter la connexion
   try {
-
     await signIn("credentials", {
       email,
       password,
       redirectTo: "/settings",
     });
 
-
+    // Si la connexion réussit, la redirection se fera automatiquement
+    // Nous n'avons donc pas besoin de retourner quoi que ce soit ici
 
   } catch (error) {
+    // Gérer les erreurs d'authentification
     if (error instanceof AuthError) {
       switch (error.type) {
         case "CredentialsSignin":
@@ -66,8 +87,13 @@ export const Login = async (values: z.infer<typeof LoginSchema>) => {
             error: "Une erreur est survenue, veuillez réessayer",
           };
       }
-
-      throw error;
     }
+
+    // Si ce n'est pas une AuthError, propager l'erreur
+    throw error;
   }
+
+  // Ce retour ne sera jamais atteint en raison de la redirection ou des erreurs gérées,
+  // mais TypeScript l'exige pour la cohérence du type de retour
+  return {};
 };
