@@ -25,6 +25,7 @@ export const NewVerificationForm = () => {
         }
 
         if(!token) return;
+        
         newVerification(token)
         .then(data => {
             setError(data?.error)
