@@ -1,5 +1,7 @@
 "use server";
 
+import { db } from "@/lib/db";
+
 import * as z from "zod";
 import { LoginSchema } from "@/schemas";
 import { signIn } from "@/auth";
@@ -15,6 +17,9 @@ import {
 } from "@/lib/mail";
 
 import { getUserByEmail } from "@/data/user";
+import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
+import { error } from "console";
+import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
 
 // Définir les types pour les résultats possibles de la fonction de connexion
@@ -46,7 +51,7 @@ export const Login = async (values: z.infer<typeof LoginSchema>): Promise<LoginR
   }
 
   // Récupérer l'email et le mot de passe validés
-  const { email, password } = validatedFields.data;
+  const { email, password, code } = validatedFields.data;
 
   // Vérifier l'existence de l'utilisateur
   const existingUser = await getUserByEmail(email);
@@ -59,6 +64,7 @@ export const Login = async (values: z.infer<typeof LoginSchema>): Promise<LoginR
 
   // Vérifier si l'email de l'utilisateur est vérifié
   if (!existingUser.emailVerified) {
+
     // Générer et envoyer un token de vérification si l'email n'est pas vérifié
     const verificationToken = await generateVerificationToken(existingUser.email);
 
@@ -73,15 +79,60 @@ export const Login = async (values: z.infer<typeof LoginSchema>): Promise<LoginR
   }
 
   if(existingUser.isTwoFactorEnabled && existingUser.email) {
-    // Générer et envoyer un token d'authentification à deux facteurs si activé
-    const twoFactorToken = await generateTwoFactorToken(existingUser.email);
 
-    await sendTwoFactorTokenEmail(
-      twoFactorToken.email,
-      twoFactorToken.token
-    );
+    if(code) {
 
-    return { twoFactor : true }
+      const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
+
+      if(!twoFactorToken) {
+        return { error: "Invalid token code!"};
+      }
+
+      if(twoFactorToken.token !== code) {
+        return { error: "Invalid token code!"};
+      }
+
+      const hasExpired = new Date(twoFactorToken.expires) < new Date();
+
+      if(hasExpired) {
+        return { error: "Token has expired!" };
+      }
+
+      await db.twoFactorToken.delete({
+        where: {
+          id: twoFactorToken.id
+        }
+      });
+
+      const existingConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
+
+      if(existingConfirmation) {
+        await db.twoFactorConfirmation.delete({
+          where: {
+            id: existingConfirmation.id
+          }
+        });
+      }
+
+      await db.twoFactorConfirmation.create({
+        data: {
+          userId: existingUser.id
+        }
+      })
+
+    } else {
+
+      // Générer et envoyer un token d'authentification à deux facteurs si activé
+      const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+
+      await sendTwoFactorTokenEmail(
+        twoFactorToken.email,
+        twoFactorToken.token
+      );
+
+      return { twoFactor : true }
+    }
+    
   }
   
   // Tenter la connexion
