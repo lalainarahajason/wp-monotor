@@ -5,15 +5,24 @@ import { LoginSchema } from "@/schemas";
 import { signIn } from "@/auth";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 import { AuthError } from "next-auth";
-import { generateVerificationToken } from "@/lib/tokens";
+import { 
+  generateVerificationToken, 
+  generateTwoFactorToken 
+} from "@/lib/tokens";
+import { 
+  sendVerificationEmail, 
+  sendTwoFactorTokenEmail 
+} from "@/lib/mail";
+
 import { getUserByEmail } from "@/data/user";
-import { sendVerificationEmail } from "@/lib/mail";
+
 
 // Définir les types pour les résultats possibles de la fonction de connexion
 type LoginResult = {
   message?: z.ZodError['errors'];
   error?: string;
   success?: string;
+  twoFactor?: boolean
 };
 
 /**
@@ -61,6 +70,18 @@ export const Login = async (values: z.infer<typeof LoginSchema>): Promise<LoginR
     return {
       success: "Confirmation email sent"
     };
+  }
+
+  if(existingUser.isTwoFactorEnabled && existingUser.email) {
+    // Générer et envoyer un token d'authentification à deux facteurs si activé
+    const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+
+    await sendTwoFactorTokenEmail(
+      twoFactorToken.email,
+      twoFactorToken.token
+    );
+
+    return { twoFactor : true }
   }
   
   // Tenter la connexion
