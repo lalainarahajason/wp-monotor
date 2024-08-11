@@ -9,14 +9,7 @@ async function SettingsPage() {
   return (
     <div className="flex flex-col gap-y-10 items-center"> 
       <NavBar />
-      <form action={async() => {
-        "use server";
-        await signOut({
-          redirectTo:"/auth/login"
-        })
-      }}>
-        <Button>Sign out</Button>
-      </form>
+      
       </div>
   )
 }

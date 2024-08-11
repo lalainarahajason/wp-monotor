@@ -45,7 +45,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
                     where: { id: twoFactorConfirmation.id }
                 });
 
-
             }
 
             return true
