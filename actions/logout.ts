@@ -6,5 +6,7 @@ export const logOut = async () => {
 
     // Some server stuffs
     
-    await signOut();
+    await signOut({
+        redirectTo: "/auth/login",
+    });
 }

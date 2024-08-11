@@ -3,10 +3,12 @@
 import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import path from "path";
+import {UserButton} from "@/components/auth/user-button"
 
 export const NavBar = () => {
   const pathname = usePathname();
+
+  
 
   return (
     <nav className="bg-secondary flex justify-between items-center p-4 rounded-xl w-[600px] shadow-sm">
@@ -36,6 +38,7 @@ export const NavBar = () => {
           <Link href="/settings">Settings</Link>
         </Button>
       </div>
+      <UserButton />
     </nav>
   );
 };
