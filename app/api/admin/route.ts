@@ -6,8 +6,6 @@ export async function GET() {
 
     const role = await CurrentRole();
 
-    console.log(role)
-
     if(role === UserRole.ADMIN) {
 
         return new NextResponse(
