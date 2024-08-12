@@ -26,6 +26,14 @@ export const settings = async (
         }
     }
 
+    // if account is social login, disable those fields
+    if(user.isOAuth) {
+        values.email = undefined;
+        values.password = undefined;
+        values.newPassword = undefined;
+        values.isTwoFactorEnabled = undefined;
+    }
+
     await db.user.update({
         where: {
             id: dbUser.id
