@@ -1,16 +1,13 @@
 import { auth, signOut } from "@/auth"
-import { Button } from "@/components/ui/button"
+import SettingsCard from "./_components/card"
 
 
 async function SettingsPage() {
 
-    const session = await auth()
+  const session = await auth()
 
   return (
-    <div className="flex flex-col gap-y-10 items-center"> 
-      Settings
-      
-      </div>
+    <SettingsCard />
   )
 }
 
