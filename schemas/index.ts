@@ -22,9 +22,12 @@ export const SettingsSchema = z.object({
 })
 .refine((data) => {
 
-    if(!data.password && data.newPassword) {
+    if(!data.newPassword && data.password) {
         return false
     }
+
+    return true;
+    
 }, {
     message: "Current password is required",
     path: ["password"]

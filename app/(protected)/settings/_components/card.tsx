@@ -41,12 +41,12 @@ import { SettingsSchema } from "@/schemas";
 import { UserRole } from "@prisma/client";
 
 const SettingsCard = () => {
+
   const user = useCurrentUser();
-
-  console.log(user);
-
+  
   const [isPending, startTransition] = useTransition();
   const { update } = useSession();
+  const {data: session} = useSession();
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
 
@@ -58,6 +58,7 @@ const SettingsCard = () => {
       role: user?.role || undefined,
       password: undefined,
       newPassword: undefined,
+      isTwoFactorEnabled: user?.isTwoFactorEnabled || false,
     },
   });
 
@@ -102,8 +103,9 @@ const SettingsCard = () => {
                     </FormItem>
                   )}
                 />
+                
                 {/** Email field */}
-                {user?.isOAuth === false && (
+                {session?.user?.isOAuth === false && (
                   <>
                     <FormField
                       control={form.control}

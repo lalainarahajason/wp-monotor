@@ -4,7 +4,7 @@ import SettingsCard from "./_components/card"
 
 async function SettingsPage() {
 
-  const session = await auth()
+  const session = await auth();
 
   return (
     <SettingsCard />
