@@ -23,7 +23,7 @@ export const sendVerificationEmail = async (
     email:string, 
     token:string
 ) => {
-    const confirmLink = `${process.env.APP_DOMAIN}auth/new-verification?token=${token}`
+    const confirmLink = `${process.env.NEXT_PUBLIC_API_URL}auth/new-verification?token=${token}`
 
     await resend.emails.send({
         from:"ikalangitahaja@gmail.com",
@@ -41,7 +41,7 @@ export const sendPasswordResetEmail = async (
     email:string, 
     token:string
 ) => {
-    const resetLink = `${process.env.APP_DOMAIN}auth/new-password?token=${token}`
+    const resetLink = `${process.env.NEXT_PUBLIC_API_URL}auth/new-password?token=${token}`
 
     await resend.emails.send({
         from:"ikalangitahaja@gmail.com",

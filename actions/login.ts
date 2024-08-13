@@ -39,7 +39,13 @@ type LoginResult = {
  * @param values - Les valeurs de connexion fournies par l'utilisateur
  * @returns Une promesse résolvant vers un objet LoginResult
  */
-export const Login = async (values: z.infer<typeof LoginSchema>): Promise<LoginResult> => {
+export const Login = async (
+  values: z.infer<typeof LoginSchema>, 
+  callbackUrl?: string | null
+): Promise<LoginResult> => {
+
+  console.log("callbackurl", callbackUrl);
+
   // Valider les champs d'entrée
   const validatedFields = LoginSchema.safeParse(values);
 
@@ -140,7 +146,7 @@ export const Login = async (values: z.infer<typeof LoginSchema>): Promise<LoginR
     await signIn("credentials", {
       email,
       password,
-      redirectTo: "/settings",
+      redirectTo: callbackUrl || DEFAULT_LOGIN_REDIRECT, // TODO : fix this
     });
 
     // Si la connexion réussit, la redirection se fera automatiquement
