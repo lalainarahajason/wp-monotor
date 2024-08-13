@@ -48,7 +48,8 @@ export const RegisterForm = () => {
         if(data.error) {
           setError(data.error)
         } else {
-          setSuccess(data.success)
+          setSuccess(data.success);
+          form.reset();
         }
       })
     })
