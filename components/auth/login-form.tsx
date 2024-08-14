@@ -26,12 +26,17 @@ import Link from "next/link";
 import { Login } from "@/actions/login";
 import { DEFAULT_LOGIN_REDIRECT } from "@/routes";
 
+import { useTranslation } from "@/context/translation-context";
+
 export const LoginForm = () => {
+
+  const { translate } = useTranslation();
+
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
     searchParams.get("error") === "OAuthAccountNotLinked"
-      ? "Email already in use with different provider"
+      ? translate('email-used', 'authentication')
       : "";
 
   const [isPending, startTransition] = useTransition();
@@ -78,9 +83,9 @@ export const LoginForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Welcom back"
+      headerLabel={ translate('welcome-back','form')}
       backButtonHref="/auth/register"
-      backButtonLabel="Create an account"
+      backButtonLabel={ translate('create-account', 'form') }
       showSocial
     >
       <Form {...form}>
@@ -113,7 +118,7 @@ export const LoginForm = () => {
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Email address</FormLabel>
+                      <FormLabel>{ translate('email', 'form') }</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -132,7 +137,7 @@ export const LoginForm = () => {
                   name="password"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>Password</FormLabel>
+                      <FormLabel>{ translate('password', 'form') }</FormLabel>
                       <FormControl>
                         <Input
                           {...field}
@@ -147,7 +152,7 @@ export const LoginForm = () => {
                         asChild
                         className="px-0 font-normal"
                       >
-                        <Link href="/auth/reset">Mot de passe oublié ?</Link>
+                        <Link href="/auth/reset">{ translate('forgot-password', 'form')}</Link>
                       </Button>
                       <FormMessage />
                     </FormItem>
@@ -159,7 +164,7 @@ export const LoginForm = () => {
           <FormError message={error || urlError} />
           <FormSuccess message={success} />
           <Button type="submit" className="w-full" disabled={isPending}>
-            {showTwoFactor ? "Confirm" : "Login"}
+            {showTwoFactor ? translate('confirm', 'form') : translate('login', 'form')}
           </Button>
         </form>
       </Form>

@@ -11,8 +11,8 @@ declare global {
       [key in 'en' | 'fr']: TranslationKeys;
   };
 
-  type TranslationSet = 'general' | 'register';
-  type TranslationSet = 'translations' | 'register';
+  //  TODO : merge register with authentication
+  type TranslationSet = 'general' | 'form' | 'authentication';
 
   type translationContextType = {
     lang: Lang;

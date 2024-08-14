@@ -64,9 +64,9 @@ export const RegisterForm = () => {
 
   return (
     <CardWrapper
-      headerLabel={translate('create-account', 'register')}
+      headerLabel={translate('create-account', 'form')}
       backButtonHref="/auth/login"
-      backButtonLabel={translate('already-have-account', 'register')}
+      backButtonLabel={translate('already-have-account', 'form')}
       showSocial
     >
       <Form {...form}>
@@ -81,11 +81,11 @@ export const RegisterForm = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{translate('name', 'register')}</FormLabel>
+                    <FormLabel>{translate('name', 'form')}</FormLabel>
                     <FormControl>
                       <Input 
                         {...field}
-                        placeholder={ translate('your-name', 'register') }
+                        placeholder={ translate('your-name', 'form') }
                         disabled={isPending}
                       />
                     </FormControl>
@@ -99,7 +99,7 @@ export const RegisterForm = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{ translate('email', 'register') }</FormLabel>
+                    <FormLabel>{ translate('email', 'form') }</FormLabel>
                     <FormControl>
                       <Input 
                         {...field}
@@ -118,7 +118,7 @@ export const RegisterForm = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>{ translate('password', 'register') }</FormLabel>
+                    <FormLabel>{ translate('password', 'form') }</FormLabel>
                     <FormControl>
                       <Input 
                         {...field}
@@ -134,7 +134,7 @@ export const RegisterForm = () => {
             </div>
             <FormError message={error} />
             <FormSuccess message={success} />
-            <Button type="submit" className="w-full" disabled={isPending}>{ translate('create-account', 'register') }</Button>
+            <Button type="submit" className="w-full" disabled={isPending}>{ translate('create-account', 'form') }</Button>
           </form>
       </Form>
     </CardWrapper>

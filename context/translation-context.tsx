@@ -1,11 +1,16 @@
 "use client";
 
 import React, { useContext, useState, createContext } from "react";
-import { translations, registerTranslation } from "@/translations/strings";
+import { 
+    general, 
+    form, 
+    authentication 
+} from "@/translations/strings";
 
 const translationSets: Record<TranslationSet, Translations> = {
-  general: translations,
-  register: registerTranslation,
+  general,
+  form,
+  authentication
 };
 
 

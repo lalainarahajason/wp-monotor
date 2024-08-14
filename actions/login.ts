@@ -18,7 +18,6 @@ import {
 
 import { getUserByEmail } from "@/data/user";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
-import { error } from "console";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
 
