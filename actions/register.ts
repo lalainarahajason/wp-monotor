@@ -1,13 +1,15 @@
-"use server"
+"use server";
 
-import { db } from "@/lib/db"
-import bcrypt from "bcryptjs"
-import * as z from "zod"
-import { RegisterSchema } from "@/schemas"
-import { getUserByEmail } from "@/data/user"
-import { generateVerificationToken } from "@/lib/tokens"
+import { db } from "@/lib/db";
+import bcrypt from "bcryptjs";
+import * as z from "zod";
+import { RegisterSchema } from "@/schemas";
+import { getUserByEmail } from "@/data/user";
+import { generateVerificationToken } from "@/lib/tokens";
 
-import { sendVerificationEmail } from "@/lib/mail"
+import { sendVerificationEmail } from "@/lib/mail";
+
+import { serverTranslate } from "@/translations/serverTranslation"
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
@@ -44,6 +46,6 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
         verificationToken.token
     )
 
-    // TODO send verification email token
-    return { success : "Confirmation email sent"}
+    // TODO handle auto translate (may be inside user account)
+    return { success : serverTranslate('confirmation-email-sent', 'fr', 'authentication')}
 }

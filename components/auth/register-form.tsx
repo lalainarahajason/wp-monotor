@@ -6,6 +6,8 @@ import { LoginSchema, RegisterSchema } from "@/schemas";
 import { CardWrapper } from "@/components/auth/card-wrapper";
 import { useTransition, useState } from "react";
 
+import { useTranslation } from "@/context/translation-context";
+
 import {
   Form,
   FormControl,
@@ -23,6 +25,10 @@ import { FormSuccess } from "@/components/form-success";
 import { register } from "@/actions/register";
 
 export const RegisterForm = () => {
+
+  const { translate } = useTranslation();
+
+
 
   const [isPending, startTransition] = useTransition()
   const [error, setError] = useState<string|undefined>("")
@@ -58,9 +64,9 @@ export const RegisterForm = () => {
 
   return (
     <CardWrapper
-      headerLabel="Create an account"
+      headerLabel={translate('create-account', 'form')}
       backButtonHref="/auth/login"
-      backButtonLabel="Already have an account ?"
+      backButtonLabel={translate('already-have-account', 'form')}
       showSocial
     >
       <Form {...form}>
@@ -75,11 +81,11 @@ export const RegisterForm = () => {
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Name</FormLabel>
+                    <FormLabel>{translate('name', 'form')}</FormLabel>
                     <FormControl>
                       <Input 
                         {...field}
-                        placeholder="your name"
+                        placeholder={ translate('your-name', 'form') }
                         disabled={isPending}
                       />
                     </FormControl>
@@ -93,7 +99,7 @@ export const RegisterForm = () => {
                 name="email"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Email address</FormLabel>
+                    <FormLabel>{ translate('email', 'form') }</FormLabel>
                     <FormControl>
                       <Input 
                         {...field}
@@ -112,7 +118,7 @@ export const RegisterForm = () => {
                 name="password"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Password</FormLabel>
+                    <FormLabel>{ translate('password', 'form') }</FormLabel>
                     <FormControl>
                       <Input 
                         {...field}
@@ -128,7 +134,7 @@ export const RegisterForm = () => {
             </div>
             <FormError message={error} />
             <FormSuccess message={success} />
-            <Button type="submit" className="w-full" disabled={isPending}>Create an account</Button>
+            <Button type="submit" className="w-full" disabled={isPending}>{ translate('create-account', 'form') }</Button>
           </form>
       </Form>
     </CardWrapper>
