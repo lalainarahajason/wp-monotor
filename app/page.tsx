@@ -18,7 +18,7 @@ export default function Home() {
           Wp Monitor authentication
         </p>
         <div>
-          <LoginButton mode="modal" asChild>
+          <LoginButton asChild>
             <Button variant="secondary" size="lg">Sign In</Button>
           </LoginButton>
         </div>
